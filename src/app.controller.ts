@@ -15,6 +15,12 @@ export class AppController {
     return this.appService.hola();
   }
 
+  @Get('prueba')
+  getPrueba(): any {
+    return this.appService.getPrueba();
+  }
+
+
   @Get('palabra/:palabra')
   getParametro(@Param('palabra') texto: string): any {
     console.log(texto)
