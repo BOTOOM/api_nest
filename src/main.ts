@@ -9,7 +9,6 @@ async function bootstrap() {
   .setTitle('mi api example')
   .setDescription('The cats API description')
   .setVersion('1.0')
-  .addTag('cosas')
   .build();
 const document = SwaggerModule.createDocument(app, options);
 SwaggerModule.setup('api', app, document);
