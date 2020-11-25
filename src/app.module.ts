@@ -3,10 +3,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PokeapiModule } from './modules/pokeapi/pokeapi.module';
 import { RequestPokeapiService } from './shared/request-pokeapi/request-pokeapi.service';
+import { FirebaseService } from './shared/firebase/firebase.service';
 
 @Module({
   imports: [PokeapiModule, HttpModule],
   controllers: [AppController],
-  providers: [AppService, RequestPokeapiService],
+  providers: [AppService, RequestPokeapiService, FirebaseService],
 })
 export class AppModule {}
