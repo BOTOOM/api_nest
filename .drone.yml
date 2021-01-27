@@ -45,7 +45,7 @@ steps:
     - release
     - master
 
-- name: run_docker_image
+- name: run_docker_image_new
   image: docker:dind
   volumes:
   - name: dockersock
