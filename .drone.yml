@@ -17,19 +17,19 @@ steps:
     event:
     - push
 
-- name: build_image
-  image: docker:dind
-  volumes:
-  - name: dockersock
-  path: /var/run/docker.sock
-  commands:
-  - docker build -t botoom/api .
-  when:
-    branch:
-    - release
-    - master
-    event:
-    - push
+# - name: build_image
+#   image: docker:dind
+#   volumes:
+#   - name: dockersock
+#   path: /var/run/docker.sock
+#   commands:
+#   - docker build -t botoom/api .
+#   when:
+#     branch:
+#     - release
+#     - master
+#     event:
+#     - push
 
 # - name: run_docker_image
 #   image: docker:dind
