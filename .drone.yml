@@ -88,21 +88,20 @@ steps:
 #     - push
 #     status:
 #     - failure
-#     - success
-        
-  - name: remove_docker_images
-    image: docker:dind
-    volumes:
-      - name: dockersock
-        path: /var/run/docker.sock
-    commands:
-      - docker rmi $(docker images -f "dangling=true" -q) --force
-    when:
-      branch:
-        - release
-        - master
-      event:
-        - push
+#     - success 
+- name: remove_docker_images
+  image: docker:dind
+  volumes:
+    - name: dockersock
+      path: /var/run/docker.sock
+  commands:
+    - docker rmi $(docker images -f "dangling=true" -q) --force
+  when:
+    branch:
+      - release
+      - master
+    event:
+      - push
 
 volumes:
   - name: dockersock
