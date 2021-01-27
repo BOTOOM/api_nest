@@ -15,7 +15,7 @@ steps:
     - release
     - master
     event:
-  - push
+    - push
 
 - name: build_image
   image: docker:dind
