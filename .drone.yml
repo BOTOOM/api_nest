@@ -18,10 +18,10 @@ steps:
     - push
 
 - name: build_image
-  image: docker:dind
+  image: docker
   volumes:
   - name: dockersock
-  path: var/run/docker.sock
+  path: /var/run/docker.sock
   commands:
   - docker build -t botoom/api .
   when:
