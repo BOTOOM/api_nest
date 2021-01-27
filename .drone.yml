@@ -1,0 +1,116 @@
+
+kind: pipeline
+name: build_api
+
+steps:
+- name: build
+  image: node:14
+  commands:
+  - npm i
+  - npm run build
+  when:
+    branch:
+    - feature/*
+    - develop
+    - release
+    - master
+    event:
+  - push
+
+- name: build_image
+  image: docker:dind
+  volumes:
+  - name: dockersock
+  path: /var/run/docker.sock
+  commands:
+  - docker build -t botoom/api .
+  when:
+    branch:
+    - release
+    - master
+    event:
+    - push
+
+- name: run_docker_image
+  image: docker:dind
+  volumes:
+  - name: dockersock
+  path: /var/run/docker.sock
+  commands:
+  - docker stop mi_api
+  - docker container rm mi_api
+  - docker run -d -p 8080:8080 --name mi_api botoom/api
+  when:
+    branch:
+    - release
+    - master
+
+- name: run_docker_image
+  image: docker:dind
+  volumes:
+  - name: dockersock
+  path: /var/run/docker.sock
+  commands:
+  - docker container rm mi_api
+  - docker run -d -p 8080:8080 --name mi_api botoom/api
+  when:
+    branch:
+    - release
+    - master
+    status:
+    - failure
+
+  
+# - name: notify_slack
+#   image: plugins/slack
+#   settings:
+#     webhook:
+#       from_secret: slack_webhook
+#     channel: deploy
+#     template: >
+#       {{#success build.status}}
+#         :heavy_check_mark:  <{{ build.link }}|SUCCESS> Build #{{build.number}}
+#         type: {{ build.event }} - Repo: {{repo.name}}
+#         Commit: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}>
+#         Branch: {{build.branch}} - Autor: {{build.author}}  :sunglasses:
+#       {{else}}
+#         :x: <{{ build.link }}|FAILURE> Build #{{build.number}}
+#         type: {{ build.event }} - Repo: {{repo.name}}
+#         Branch: {{build.branch}} - Autor: {{build.author}} :weary:
+#         Commit: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}>
+#       {{/success}}
+#   when:
+#     branch:
+#     - develop
+#     - release
+#     - master
+#     event:
+#     - push
+#     status:
+#     - failure
+#     - success
+        
+  - name: remove_docker_images
+    image: docker:dind
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - docker rmi $(docker images -f "dangling=true" -q) --force
+    when:
+      branch:
+        - release
+        - master
+      event:
+        - push
+
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
+    when:
+      branch:
+        - release
+        - master
+      event:
+        - push
