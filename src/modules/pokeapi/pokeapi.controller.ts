@@ -8,7 +8,7 @@ export class PokeapiController {
 
     constructor( private readonly pokeapiService: PokeapiService ){}
 
-    @Get('Lista')
+    @Get('ListaPokemon')
     GetLista() {
         return this.pokeapiService.GetLista()
     }
