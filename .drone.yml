@@ -51,7 +51,6 @@ steps:
   - name: dockersock
     path: /var/run/docker.sock
   commands:
-  - docker container rm mi_api
   - docker run -d -p 8080:8080 --name mi_api botoom/api
   when:
     branch:
